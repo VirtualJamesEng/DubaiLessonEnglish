@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        /* Modern font stack */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap');
+        /* Base styles */
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8edf2 100%);
+            color: #2d3748;
+        }
+        
+        /* Article container */
+        .article-container {
+            background-color: white;
+            padding: 3rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+        
+        /* Header styles */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #4a5568;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+        
+        .author-info {
+            font-style: italic;
+            color: #718096;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        /* Content styles */
+        .article-content {
+            font-size: 1.2rem;
+            color: #2d3748;
+            line-height: 1.8;
+        }
+        
+        /* Enhanced quote boxes */
+        .quote-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-left: 5px solid #3182ce;
+            padding: 2rem;
+            margin: 2.5rem 0;
+            font-size: 1.3rem;
+            font-family: 'Playfair Display', serif;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            border-radius: 0 12px 12px 0;
+        }
+        
+        /* Enhanced key takeaways */
+        .key-takeaway {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f0f9ff 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2.5rem 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        
+        .key-takeaway h3 {
+            color: #1e40af;
+            margin-top: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+        
+        /* Enhanced did you know sections */
+        .did-you-know {
+            background: linear-gradient(135deg, #fff3e0 0%, #fffaf0 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2.5rem 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        
+        .did-you-know h3 {
+            color: #c2410c;
+            margin-top: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+        
+        /* Enhanced vocabulary highlighting */
+        .vocabulary {
+            color: #3182ce;
+            cursor: pointer;
+            border-bottom: 2px dashed #3182ce;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .vocabulary:hover {
+            color: #2c5282;
+            border-bottom-color: #2c5282;
+        }
+        
+        .definition {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 250px;
+            font-size: 0.95rem;
+            z-index: 100;
+            top: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            color: #4a5568;
+        }
+        
+        /* Enhanced navigation dots */
+        .nav-dots {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            z-index: 100;
+        }
+        
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-dot.active {
+            background-color: #3182ce;
+            transform: scale(1.2);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+        
+            .article-container {
+                padding: 1.5rem;
+            }
+        
+            h1 {
+                font-size: 2.5rem;
+            }
+        
+            .quote-box, .key-takeaway, .did-you-know {
+                padding: 1.5rem;
+                margin: 2rem 0;
+            }
+        
+            .nav-dots {
+                display: none;
+            }
+        }
+        .flashcards-section {
+    padding: 4rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border-radius: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin: 4rem 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: #64748b;
+    font-size: 1.2rem;
+}
+
+.flashcards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.flashcard {
+    height: 280px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+}
+
+.flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    transform-origin: center;
+}
+
+.flashcard:hover .flashcard-inner {
+    transform: none
+}
+
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* for Safari */
+    backface-visibility: hidden;
+    padding: 0rem;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flashcard-front {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.flashcard-back {
+    background: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+    color: white;
+    transform: rotateY(180deg);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+}
+
+.card-category {
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 1rem;
+}
+
+.card-word {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1a365d;
+    margin: 1rem 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.flip-prompt {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 0;
+    right: 0;
+    font-size: 0.875rem;
+    color: #94a3b8;
+    opacity: 0.8;
+}
+
+.flashcard-back .card-category {
+    color: #e2e8f0;
+}
+
+.card-definition {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    margin: 1rem 0;
+}
+
+.example-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    width: 100%;
+}
+
+.example-label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.example-text {
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #f8fafc;
+}
+
+@media (max-width: 768px) {
+    .flashcards-section {
+        padding: 2rem;
+    }
+    
+    .flashcard {
+        height: 250px;
+    }
+    
+    .card-word {
+        font-size: 1.8rem;
+    }
+}
+.overheard-section {
+    padding: 5rem;
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 30px;
+    margin: 6rem auto;
+    max-width: 1400px;
+    box-shadow: 
+        0 0 0 1px rgba(0,0,0,0.03),
+        0 2px 4px rgba(0,0,0,0.05),
+        0 12px 24px rgba(0,0,0,0.05);
+}
+
+.overheard-section .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+}
+
+.overheard-section .section-header::after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #3182ce, #2c5282);
+    border-radius: 2px;
+}
+
+.overheard-section h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #1a365d;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.overheard-section .section-subtitle {
+    font-size: 1.25rem;
+    color: #64748b;
+    font-weight: 500;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.overheard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2.5rem;
+    padding: 1rem;
+}
+
+.overheard-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 
+        0 4px 6px -1px rgba(0,0,0,0.05),
+        0 2px 4px -1px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+}
+
+.overheard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
+    pointer-events: none;
+}
+
+.overheard-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 
+        0 20px 25px -5px rgba(0,0,0,0.1),
+        0 10px 10px -5px rgba(0,0,0,0.04);
+}
+
+.location {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: #3182ce;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(49, 130, 206, 0.1);
+    position: relative;
+}
+
+.location::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 30%;
+    height: 2px;
+    background: linear-gradient(90deg, #3182ce, transparent);
+}
+
+.quote {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #2d3748;
+    font-weight: 500;
+    margin: 0;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.quote::before {
+    content: '"';
+    position: absolute;
+    left: 0;
+    top: -0.5rem;
+    font-size: 2.5rem;
+    color: #3182ce;
+    opacity: 0.2;
+    font-family: Georgia, serif;
+}
+
+/* Card variations */
+.overheard-card:nth-child(3n+1) .location {
+    color: #3182ce;
+}
+
+.overheard-card:nth-child(3n+2) .location {
+    color: #2c5282;
+}
+
+.overheard-card:nth-child(3n+3) .location {
+    color: #1a365d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .overheard-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+    
+    .overheard-section {
+        padding: 4rem 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .overheard-section {
+        padding: 3rem 1.5rem;
+        margin: 3rem auto;
+    }
+    
+    .overheard-section h2 {
+        font-size: 2.5rem;
+    }
+    
+    .overheard-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .overheard-card {
+        padding: 1.5rem;
+    }
+    
+    .quote {
+        font-size: 1rem;
+    }
+}
+
+/* Animation for card entrance */
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.overheard-card {
+    animation: cardEntrance 0.3s ease-out;
+    animation-fill-mode: both;
+}
+
+.overheard-card:nth-child(n) {
+    animation-delay: calc(n * 0.05s);
+}
+.article-illustration {
+    margin: -2rem -3rem 3rem;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0 0 20px 20px;
+}
+
+.hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.image-caption {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(255,255,255,0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #2d3748;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .article-illustration {
+        margin: -1rem -1.5rem 2rem;
+    }
+}
+
+.conversation-windows {
+            padding: 2rem;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 30px;
+            margin: 4rem auto;
+        }
+
+        .comic-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .comic-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            transform: rotate(-1deg);
+            border: 2px solid #2d3748;
+        }
+
+        .comic-panel::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            bottom: 10px;
+            left: 10px;
+            border: 2px dashed #e2e8f0;
+            border-radius: 15px;
+            pointer-events: none;
+        }
+
+        .comic-panel.formal {
+            background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+            transform: rotate(1deg);
+        }
+
+        .comic-panel.casual {
+            background: linear-gradient(135deg, #f6e05e 0%, #faf089 100%);
+            transform: rotate(-1deg);
+        }
+
+        .comic-panel.mixed {
+            background: linear-gradient(135deg, #9ae6b4 0%, #c6f6d5 100%);
+            transform: rotate(0.5deg);
+        }
+
+        .scene-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            font-family: 'Bangers', cursive;
+            font-size: 1.4rem;
+            color: #2d3748;
+        }
+
+        .formality-level {
+            background: #3182ce;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .dialogue {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .speech {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-family: 'Comic Neue', cursive;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 80%;
+        }
+
+        .speech::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            transform: rotate(45deg);
+        }
+
+        .speech:nth-child(odd) {
+            align-self: flex-start;
+            margin-left: 2rem;
+        }
+
+        .speech:nth-child(even) {
+            align-self: flex-end;
+            margin-right: 2rem;
+            background: #ebf8ff;
+        }
+
+        .speech:nth-child(odd)::before {
+            left: -10px;
+            top: 20px;
+        }
+
+        .speech:nth-child(even)::before {
+            right: -10px;
+            top: 20px;
+            background: #ebf8ff;
+        }
+
+        .speaker {
+            font-weight: bold;
+            color: #3182ce;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .language-notes {
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .language-notes h4 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .language-notes ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .language-notes li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .language-notes li::before {
+            content: '👉';
+            position: absolute;
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .conversation-windows {
+                padding: 1rem;
+            }
+
+            .comic-panel {
+                padding: 1.5rem;
+            }
+
+            .speech {
+                max-width: 90%;
+            }
+        }
+        .comic-title-container {
+            padding: 3rem 1rem;
+            position: relative;
+            overflow: hidden;
+            margin: 2rem -2rem 4rem;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            transform: skew(0, -2deg);
+        }
+
+        .comic-title-background {
+            transform: skew(0, 2deg);
+            position: relative;
+            z-index: 1;
+        }
+
+        .comic-title {
+            font-family: 'Bangers', cursive;
+            font-size: 5rem;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 
+                4px 4px 0 #2c5282,
+                -2px -2px 0 #2c5282,
+                2px -2px 0 #2c5282,
+                -2px 2px 0 #2c5282,
+                2px 2px 0 #2c5282;
+            letter-spacing: 2px;
+            margin: 0;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+            transform: translateY(-5px);
+            animation: titlePop 0.5s ease-out forwards;
+        }
+
+        .comic-subtitle {
+            font-family: 'Comic Neue', cursive;
+            font-size: 1.8rem;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 2px 2px 0 #2c5282;
+            margin-top: 1rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            animation: subtitleSlide 0.5s ease-out forwards;
+        }
+
+        .comic-burst {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at center, transparent 0%, transparent 50%, #2c5282 51%, #2c5282 52%, transparent 53%),
+                        radial-gradient(circle at center, transparent 0%, transparent 60%, #2c5282 61%, #2c5282 62%, transparent 63%),
+                        radial-gradient(circle at center, transparent 0%, transparent 70%, #2c5282 71%, #2c5282 72%, transparent 73%);
+            opacity: 0.1;
+            z-index: 1;
+            animation: burst 15s linear infinite;
+        }
+
+        @keyframes titlePop {
+            0% {
+                transform: scale(0.8) translateY(-5px);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1) translateY(-5px);
+            }
+            100% {
+                transform: scale(1) translateY(-5px);
+                opacity: 1;
+            }
+        }
+
+        @keyframes subtitleSlide {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes burst {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .comic-title-container::before,
+        .comic-title-container::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background: repeating-linear-gradient(
+                45deg,
+                #ffd700,
+                #ffd700 10px,
+                #2c5282 10px,
+                #2c5282 20px
+            );
+        }
+
+        .comic-title-container::before {
+            top: 0;
+            transform: skew(0, 2deg) translateY(-10px);
+        }
+
+        .comic-title-container::after {
+            bottom: 0;
+            transform: skew(0, 2deg) translateY(10px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .comic-title {
+                font-size: 3rem;
+            }
+            
+            .comic-subtitle {
+                font-size: 1.4rem;
+            }
+
+            .comic-title-container {
+                padding: 2rem 1rem;
+                margin: 1rem -1rem 3rem;
+            }
+        }
+
+        /* Add explosive stars around the title */
+        .comic-title-container .star {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ffd700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: starTwinkle 1s ease-in-out infinite;
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+        }
+        .comic-panel.formal {
+    background: linear-gradient(135deg, #e2e8f0 0%, #f8fafc 100%);
+    border-color: #2c5282;
+}
+
+.comic-panel.mixed {
+    background: linear-gradient(135deg, #9ae6b4 0%, #c6f6d5 100%);
+    border-color: #2f855a;
+}
+
+.comic-panel.casual {
+    background: linear-gradient(135deg, #fbd38d 0%, #feebc8 100%);
+    border-color: #c05621;
+}
+
+/* Add hover effect for panels */
+.comic-panel {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comic-panel:hover {
+    transform: scale(1.02) rotate(0deg);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Enhance speech bubbles */
+.speech {
+    transition: transform 0.2s ease;
+}
+
+.speech:hover {
+    transform: scale(1.02);
+}
+</style>
+</style>
+</head>
+<body>
+    <div class="article-container">
+        <div class="header">
+            <h1>From London to Dubai: Our Adventure in the City of Gold</h1>
+            <div class="subtitle">A British-American couple's journey into the heart of the UAE</div>
+            <div class="author-info">By Sarah Thompson & Mike Johnson | October 28, 2024</div>
+        </div>
+
+        <div class="article-illustration">
+            <img src="Dubai2.png" alt="Whimsical Dubai Life Illustration" class="hero-image" />
+            <p class="image-caption">Where tradition meets tomorrow – sometimes at the same traffic light</p>
+        </div>
+
+        <div class="article-content">
+            <p>When Mike first suggested moving to Dubai, I thought he'd gone completely <span class="vocabulary">barmy<span class="definition">British slang for foolish or crazy</span></span>. There we were, comfortable in our London flat, me with my British sensibilities and him with his American optimism, contemplating a move to the desert. But two years later, I can tell you that diving into the unknown was the best decision we've ever made.</p>
+
+            <div class="quote-box">
+                "The moment you land in Dubai, you realize you're not just in another city – you're in tomorrow. The skyline looks like something from a sci-fi film, but the heart of the city beats with ancient rhythms."
+            </div>
+
+            <p>Our first encounter with Dubai's <span class="vocabulary">juxtaposition<span class="definition">The fact of two things being placed close together with contrasting effect</span></span> of old and new came during our house hunting adventure. We found ourselves choosing between an ultra-modern apartment in the <span class="vocabulary">megalithic<span class="definition">Resembling or characterized by huge proportions</span></span> Dubai Marina and a charming villa in Al Wasl, where the call to prayer mingles with children playing in the streets.</p>
+
+            <div class="did-you-know">
+                <h3>💡 Did You Know?</h3>
+                <p>Dubai's rapid transformation from a fishing village to a global metropolis happened in just over 50 years. The discovery of oil in 1966 catalyzed this remarkable metamorphosis, though today oil accounts for less than 1% of Dubai's GDP!</p>
+            </div>
+
+            <h3>Daily Life in the Desert Metropolis</h3>
+            <p>Life here operates on what we've come to call "Dubai Time." It's a curious blend of fast-paced business and <span class="vocabulary">languorous<span class="definition">Characterized by laziness or lack of energy</span></span> leisure. While the city never sleeps, everything moves at its own peculiar rhythm. Business meetings might start at 10 PM, and dinner reservations rarely exist before 9 PM.</p>
+
+            <div class="day-in-life">
+                <h3>A Day in Our Dubai Life</h3>
+                <div class="time-entry">
+                    <span class="time">6:30 AM:</span> Wake up to the harmonious blend of the call to prayer and construction cranes (Dubai's unofficial anthem).
+                </div>
+                <div class="time-entry">
+                    <span class="time">7:30 AM:</span> Navigate the metro's Gold Class cabin, where you'll hear at least six languages before reaching your stop. The morning commute is a fashion show of global proportions.
+                </div>
+                <div class="time-entry">
+                    <span class="time">10:00 AM:</span> First meeting of the day, where "five minutes" could mean anything from five actual minutes to an hour – we call it "Dubai Standard Time."
+                </div>
+                <div class="time-entry">
+                    <span class="time">1:00 PM:</span> Lunch could be anything from a 3 AED <span class="vocabulary">shawarma<span class="definition">A Middle Eastern dish of meat cut into thin slices and served in pita bread</span></span> to a business lunch in a rotating rooftop restaurant.
+                </div>
+                <div class="time-entry">
+                    <span class="time">4:00 PM:</span> Duck into an air-conditioned mall to escape the afternoon heat. Shopping isn't just a pastime here; it's a survival strategy.
+                </div>
+                <div class="time-entry">
+                    <span class="time">7:00 PM:</span> Evening adventures begin - perhaps a desert safari or a yacht dinner cruise. The city transforms as the sun sets.
+                </div>
+                <div class="time-entry">
+                    <span class="time">11:00 PM:</span> Still wide awake! The city's nightlife is just warming up, and somewhere, a business deal is being sealed over Arabic coffee and dates.
+                </div>
+            </div>
+
+            <p>The <span class="vocabulary">souk<span class="definition">An Arab marketplace or bazaar; a commercial quarter in an urban setting</span></span> merchants taught us our first lesson in cultural navigation. Mike's direct American bargaining style needed some British diplomatic finessing. Now we've mastered the art of tea-drinking and price-haggling, turning shopping into a social event rather than a transaction.</p>
+
+            <div class="quote-box">
+                "In Dubai, everything is a conversation. Whether you're buying spices or signing a business deal, relationships matter more than transactions. It's not about time, it's about trust."
+            </div>
+
+            <p>Let me tell you about our everyday adventures that make Dubai unique. Take our morning commute: Mike once found himself in a traffic jam behind a convoy of supercars, two camels (yes, actual camels!), and a golf cart - only in Dubai! The <span class="vocabulary">kerfuffle<span class="definition">A commotion or fuss, especially one caused by conflicting views</span></span> that ensued when everyone tried to merge into one lane was both hilarious and uniquely Dubai.</p>
+
+            <div class="key-takeaway">
+                <h3>🔑 Survival Tips for New Expats</h3>
+                <ul>
+                    <li>Always have your location pin ready to share on WhatsApp - it's the unofficial second language of Dubai delivery services!</li>
+                    <li>Learn to dress for multiple occasions in one day - you might go from a conservative business meeting to a beach club</li>
+                    <li>Get comfortable with "Inshallah time" - things happen when they happen</li>
+                    <li>Master the art of mall navigation - they're your climate-controlled lifeline in summer</li>
+                </ul>
+            </div>
+
+            <p>The summer heat was our biggest challenge. When temperatures soar to <span class="vocabulary">sweltering<span class="definition">Uncomfortably hot; oppressively humid</span></span> heights of 45°C (113°F), you learn to appreciate the indoor city that Dubai has created. From ski slopes to aquariums in shopping malls, life continues in climate-controlled splendor.</p>
+
+            <h3>Cultural Collisions and Discoveries</h3>
+            <p>You haven't truly experienced Dubai until you've had at least three cultural misunderstandings before breakfast. Like the time I tried to shake hands with a conservative businessman (note: don't), or when Mike enthusiastically gave a thumbs-up in a meeting (another cultural faux pas we quickly learned about). These moments of <span class="vocabulary">multifarious<span class="definition">Many and of various types</span></span> cultural exchange have become our favorite dinner party stories.</p>
+
+            <div class="did-you-know">
+                <h3>💡 Daily Life Quirks</h3>
+                <p>In Dubai, you'll find yourself giving directions using landmarks rather than street names. "It's near the building that looks like a rolled-up newspaper, opposite the golden shopping cart sculpture" is a perfectly normal way to explain where you live! And yes, that building actually exists.</p>
+            </div>
+
+            <p>Our social circle has become a <span class="vocabulary">potpourri<span class="definition">A mixture of diverse things</span></span> of nationalities. Our dinner parties now feature British roasts alongside American pies, Arabic mezze, and Indian curries. Dubai's <span class="vocabulary">cosmopolitan<span class="definition">Including people from many different countries</span></span> nature means you're never just learning one new culture – you're experiencing dozens.</p>
+
+            <h3>The Great Address Adventure</h3>
+            <p>Speaking of addresses, ordering delivery here is an adventure in itself. Our first attempt to get food delivered went something like this:</p>
+            <div class="quote-box" style="font-size: 1em;">
+                Delivery Driver: "I'm near you."<br>
+                Us: "Great! We're in the blue building."<br>
+                Driver: "There are 7 blue buildings."<br>
+                Us: "The one with the..." *spends 15 minutes describing every architectural feature while our food gets cold*
+            </div>
+
+            <p>But that's part of Dubai's charm. The city operates on a system of organized chaos that somehow works perfectly. We've learned to embrace the uncertainty and go with the flow, whether it's dealing with bureaucratic procedures that change weekly or navigating the complex social etiquette of when to kiss, bow, or shake hands (or not).</p>
+
+            <p>The <span class="vocabulary">dichotomy<span class="definition">A division or contrast between two things</span></span> between tradition and modernity is ever-present. One morning you might find yourself in a self-driving Tesla headed to a blockchain conference, and by evening you're riding a wooden <span class="vocabulary">abra<span class="definition">A traditional wooden boat used to ferry passengers across Dubai Creek</span></span> across the Creek to eat at a family-owned restaurant that's lasted generations.</p>
+
+            <p>Perhaps the most surprising aspect has been watching how Dubai <span class="vocabulary">amalgamates<span class="definition">Combines or unites to form one organization or structure</span></span> seemingly contradictory elements into a harmonious whole. Modern women in business suits walk alongside those in traditional abayas, ancient desert traditions coexist with cryptocurrency innovations, and somehow it all works.</p>
+
+            <div class="quote-box">
+                "Dubai doesn't ask you to choose between old and new, East and West, tradition and innovation. Instead, it asks you to embrace all of it, creating something entirely unique in the process."
+            </div>
+
+            <p>One of our most memorable moments was during our first Ramadan, when we <span class="vocabulary">inadvertently<span class="definition">Unintentionally; by accident</span></span> found ourselves in a spontaneous iftar (breaking of the fast) with our neighbors. What started as borrowing some sugar turned into a feast that lasted until midnight, complete with life stories shared in a mixture of broken English, Arabic, and enthusiastic hand gestures.</p>
+
+            <h3>Looking Back, Looking Forward</h3>
+            <p>Two years have passed since we made that leap of faith, and Dubai has transformed us as much as it continues to transform itself. We've learned to measure time not by the clock but by the rhythm of calls to prayer, to find our way using the Burj Khalifa as our North Star, and to understand that "yes" often means "maybe," and "inshallah" can mean anything from "definitely" to "not a chance."</p>
+
+            <div class="key-takeaway">
+                <h3>🔑 Final Thoughts</h3>
+                <p>Moving to Dubai requires adaptability, openness to new experiences, and a willingness to embrace contradiction. It's not just about relocating to a new city – it's about adopting a new way of seeing the world. As we often tell our friends back home: Dubai doesn't just change your address; it changes your perspective.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="article-illustration">
+        <img src="dubai3.png" alt="Whimsical Dubai Life Illustration" class="hero-image" />
+        <p class="image-caption">Dubai beaches can be extra fun</p>
+    </div>
+
+    <div class="flashcards-section">
+        <div class="section-header">
+            <h2>Vocabulary Masterclass</h2>
+            <p class="section-subtitle">Master these key terms from your Dubai journey</p>
+        </div>
+    
+        <div class="flashcards-grid">
+            <!-- Showcase card -->
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">British Slang</span>
+                        <h3 class="card-word">Barmy</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">British slang for foolish or crazy</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"When Mike suggested moving to Dubai, I thought he'd gone completely barmy."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Literary Term</span>
+                        <h3 class="card-word">Juxtaposition</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">The fact of two things being placed close together with contrasting effect</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"Dubai's juxtaposition of ancient traditions and futuristic architecture is striking."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Architecture</span>
+                        <h3 class="card-word">Megalithic</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">Resembling or characterized by huge proportions</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"The megalithic towers of Dubai Marina dominate the skyline."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Descriptive</span>
+                        <h3 class="card-word">Languorous</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">Characterized by laziness or lack of energy</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"The languorous afternoon heat slows everything down."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Arabic Term</span>
+                        <h3 class="card-word">Souk</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">An Arab marketplace or bazaar; a commercial quarter in an urban setting</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"The souk merchants taught us our first lesson in cultural navigation."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Weather</span>
+                        <h3 class="card-word">Sweltering</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">Uncomfortably hot; oppressively humid</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"When temperatures soar to sweltering heights of 45°C (113°F), you learn to appreciate the indoor city."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Metaphoric</span>
+                        <h3 class="card-word">Potpourri</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">A mixture of diverse things</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"Our social circle has become a potpourri of nationalities."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Cultural</span>
+                        <h3 class="card-word">Cosmopolitan</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">Including people from many different countries</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"Dubai's cosmopolitan nature means you're never just learning one new culture."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Literary Term</span>
+                        <h3 class="card-word">Dichotomy</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">A division or contrast between two things</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"The dichotomy between tradition and modernity is ever-present."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Arabic Term</span>
+                        <h3 class="card-word">Abra</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">A traditional wooden boat used to ferry passengers across Dubai Creek</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"By evening you're riding a wooden abra across the Creek."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Formal</span>
+                        <h3 class="card-word">Amalgamates</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">Combines or unites to form one organization or structure</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"Dubai amalgamates seemingly contradictory elements into a harmonious whole."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">British Slang</span>
+                        <h3 class="card-word">Kerfuffle</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">A commotion or fuss, especially one caused by conflicting views</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"The kerfuffle that ensued when everyone tried to merge into one lane was uniquely Dubai."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Arabic Term</span>
+                        <h3 class="card-word">Shawarma</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">A Middle Eastern dish of meat cut into thin slices and served in pita bread</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"Lunch could be anything from a 3 AED shawarma to a business lunch in a rotating restaurant."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Literary Term</span>
+                        <h3 class="card-word">Multifarious</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">Many and of various types</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"These moments of multifarious cultural exchange have become our favorite dinner party stories."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="card-category">Formal</span>
+                        <h3 class="card-word">Inadvertently</h3>
+                        <span class="flip-prompt">Click to reveal meaning</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="card-category">Definition</span>
+                        <p class="card-definition">Unintentionally; by accident</p>
+                        <div class="example-section">
+                            <span class="example-label">Example:</span>
+                            <p class="example-text">"We inadvertently found ourselves in a spontaneous iftar with our neighbors."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="article-illustration">
+        <img src="dubai4.jpeg" alt="Whimsical Dubai Life Illustration" class="hero-image" />
+        <p class="image-caption">Welcome to Dubai</p>
+    </div>
+
+    <div class="overheard-section">
+        <div class="section-header">
+            <h2>Overheard in Dubai</h2>
+            <p class="section-subtitle">Snippets of conversations that could only happen here...</p>
+        </div>
+    
+        <div class="overheard-grid">
+            <div class="overheard-card">
+                <div class="location">At Kite Beach</div>
+                <div class="quote">"No, that's not a cloud blocking the sun. That's just the shadow from Burj Khalifa. Give it 10 minutes, we'll have sun again."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">Near Silicon Oasis</div>
+                <div class="quote">"What do you mean you're lost? I told you - drive past Academic City, but before Dragon Mart, take a right at the camel race track, if you hit the desert safari camp you've gone too far."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Jumeirah Beach Residence</div>
+                <div class="quote">"The rent is only 250,000 dirhams!"
+                "What a bargain!"
+                *cries in expat*</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Last Exit</div>
+                <div class="quote">"Let's grab some food from the food trucks."
+                "You mean the stationary trucks that are actually buildings shaped like trucks?"
+                "Welcome to Dubai, habibi."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At a Shawarma Shop</div>
+                <div class="quote">"Extra toum?"
+                "Are you even asking? I have no meetings tomorrow."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Global Village</div>
+                <div class="quote">"I'll meet you at the Taj Mahal."
+                "The real one?"
+                "No, the one next to the Eiffel Tower and the Leaning Tower of Pisa."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">On Sheikh Zayed Road</div>
+                <div class="quote">"The speed limit is 120."
+                "No, the sign says 100."
+                "Exactly. That means 120."
+                "Ah, the Dubai calculator."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Dubai Airport</div>
+                <div class="quote">"Terminal 1, 2, or 3?"
+                "3."
+                "North, south, east, or west?"
+                "Just follow the smell of Duty Free perfume."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Ripe Market</div>
+                <div class="quote">"80 dirhams for organic kale?"
+                "But it's artisanal..."
+                "It's a leaf."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At a Villa Complex</div>
+                <div class="quote">"Your villa number?"
+                "2657B Yellow Block Phase 4 Extension Area 2."
+                "Sir, this is Phase 3."
+                "...I've been living in the wrong house?"</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Dubai Marina</div>
+                <div class="quote">"Should we walk to JBR?"
+                "Sure, it's just 5 minutes away!"
+                *45 minutes later*
+                "I forgot about Dubai minutes."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At The Walk</div>
+                <div class="quote">"Nice car!"
+                "Thanks, it's a rental."
+                "Everything in Dubai is a rental."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At The Palm</div>
+                <div class="quote">"The GPS says we're in the middle of the sea."
+                "Nah, that's just The Palm things. Keep driving."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Dubai Metro</div>
+                <div class="quote">"Next station: Ibn Battuta"
+                *30 minutes of walking through the station later*
+                "We're still in Ibn Battuta?!"</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Barsha Heights</div>
+                <div class="quote">"Meet me at TECOM."
+                "You mean Barsha Heights?"
+                "No, TECOM."
+                "But it's called Barsha Heights now."
+                "It will always be TECOM!"</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Dubai Mall</div>
+                <div class="quote">"I'm at the main entrance."
+                "Which main entrance?"
+                "The one by the fountains."
+                "Which fountains?"
+                "Let's meet at Starbucks."
+                "WHICH Starbucks?!"</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Delivery Kitchen</div>
+                <div class="quote">"Your area?"
+                "Discovery Gardens."
+                "Sorry habibi, too far."
+                "I'll pay extra."
+                "Still too far."
+                "But you're a delivery kitchen..."
+                "Yes, delivery, not expedition."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Business Bay</div>
+                <div class="quote">"What time is the meeting?"
+                "3 PM Dubai time."
+                "So... 4:30?"
+                "Inshallah."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At Mall of the Emirates</div>
+                <div class="quote">"It's 45°C outside and we're going skiing. Only in Dubai do you need to pack sunscreen AND a winter coat."</div>
+            </div>
+    
+            <div class="overheard-card">
+                <div class="location">At a Coffee Shop</div>
+                <div class="quote">"What's your weekend?"
+                "Friday-Saturday."
+                "Oh, mine is Saturday-Sunday."
+                "Classic Dubai, even our weekends are confused."</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conversation-windows">
+        <div class="comic-title-container">
+            <div class="comic-title-background">
+                <h2 class="comic-title">A Window Into Our Dubai Conversations</h2>
+                <div class="comic-subtitle">From boardroom to balcony - real talk in the city of gold! 🗣️</div>
+                <div class="comic-burst"></div>
+            </div>
+        </div>
+    
+        <div class="comic-container">
+            <!-- Formal Business Dinner -->
+            <div class="comic-panel formal">
+                <div class="scene-title">
+                    <span class="location">🍽️ At a High-End Business Dinner</span>
+                    <span class="formality-level">Formal</span>
+                </div>
+                <div class="dialogue">
+                    <div class="speech business">
+                        <span class="speaker">UAE Business Partner:</span>
+                        "Shall we discuss the proposal over dinner?"
+                    </div>
+                    <div class="speech sarah">
+                        <span class="speaker">Sarah:</span>
+                        "I'd be delighted. Though I must say, your previous insights were spot on."
+                    </div>
+                    <div class="speech business">
+                        <span class="speaker">UAE Business Partner:</span>
+                        "You're too kind. I trust the numbers are looking promising?"
+                    </div>
+                    <div class="speech mike">
+                        <span class="speaker">Mike:</span>
+                        "Indeed, they're looking rather encouraging. We've done our homework on this one."
+                    </div>
+                </div>
+                <div class="language-notes">
+                    <h4>🔍 Language Notes:</h4>
+                    <ul>
+                        <li>"Spot on" = exactly right (British English)</li>
+                        <li>"Done our homework" = prepared thoroughly</li>
+                        <li>Notice the hedging language: "rather," "I must say," "I trust"</li>
+                    </ul>
+                </div>
+            </div>
+    
+            <!-- Casual Neighbor Chat -->
+            <div class="comic-panel casual">
+                <div class="scene-title">
+                    <span class="location">🌆 Evening Balcony Chat</span>
+                    <span class="formality-level">Super Casual</span>
+                </div>
+                <div class="dialogue">
+                    <div class="speech sarah">
+                        <span class="speaker">Sarah:</span>
+                        "Mate, I'm proper knackered. This heat is doing my head in!"
+                    </div>
+                    <div class="speech mike">
+                        <span class="speaker">Mike:</span>
+                        "Tell me about it! The AC's been on the fritz all day. Talk about a total nightmare."
+                    </div>
+                    <div class="speech sarah">
+                        <span class="speaker">Sarah:</span>
+                        "Fancy grabbing a cheeky Nando's? Can't be bothered to cook."
+                    </div>
+                    <div class="speech mike">
+                        <span class="speaker">Mike:</span>
+                        "You read my mind! Let me grab my wallet and we'll bounce."
+                    </div>
+                </div>
+                <div class="language-notes">
+                    <h4>🔍 Language Notes:</h4>
+                    <ul>
+                        <li>"Proper knackered" = very tired (British slang)</li>
+                        <li>"Doing my head in" = driving me crazy (British)</li>
+                        <li>"On the fritz" = not working properly (American)</li>
+                        <li>"Cheeky Nando's" = casual trip to Nando's restaurant (British)</li>
+                        <li>"Bounce" = leave (American slang)</li>
+                    </ul>
+                </div>
+            </div>
+    
+            <!-- Mixed Social Situation -->
+            <div class="comic-panel mixed">
+                <div class="scene-title">
+                    <span class="location">🎉 Community BBQ</span>
+                    <span class="formality-level">Semi-Casual</span>
+                </div>
+                <div class="dialogue">
+                    <div class="speech neighbor">
+                        <span class="speaker">British Neighbor:</span>
+                        "What do you lot reckon about the new coffee shop down the road?"
+                    </div>
+                    <div class="speech sarah">
+                        <span class="speaker">Sarah:</span>
+                        "It's absolutely brilliant! Though the prices are a bit steep, if you ask me."
+                    </div>
+                    <div class="speech mike">
+                        <span class="speaker">Mike:</span>
+                        "No kidding! Nearly fell off my chair when I saw the menu. But hey, when in Dubai, right?"
+                    </div>
+                    <div class="speech neighbor">
+                        <span class="speaker">British Neighbor:</span>
+                        "Too right! Fancy splitting a cab there tomorrow? Could do with a proper brew."
+                    </div>
+                </div>
+                <div class="language-notes">
+                    <h4>🔍 Language Notes:</h4>
+                    <ul>
+                        <li>"You lot" = you all/you guys (British)</li>
+                        <li>"Reckon" = think/believe (British/Australian)</li>
+                        <li>"Brilliant" = excellent (British enthusiasm)</li>
+                        <li>"Steep" = expensive</li>
+                        <li>"Proper brew" = good cup of tea (British)</li>
+                    </ul>
+                </div>
+            </div>
+
+             <!-- New Formal Conversation 1: Corporate Meeting -->
+    <div class="comic-panel formal">
+        <div class="scene-title">
+            <span class="location">🏢 Board Meeting at DIFC</span>
+            <span class="formality-level">Highly Formal</span>
+        </div>
+        <div class="dialogue">
+            <div class="speech ceo">
+                <span class="speaker">CEO:</span>
+                "I trust you've had a chance to review the quarterly projections?"
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Indeed, I have. If I may, there are several key metrics that warrant our attention. The ROI on the new initiative has exceeded our initial estimates by a considerable margin."
+            </div>
+            <div class="speech board-member">
+                <span class="speaker">Board Member:</span>
+                "That's rather encouraging. Though I must say, I have some reservations about the timeline. Might we not be better served by adopting a more measured approach?"
+            </div>
+            <div class="speech mike">
+                <span class="speaker">Mike:</span>
+                "While I appreciate your concerns, our market analysis suggests that timing is absolutely crucial here. We're looking at a prime window of opportunity."
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "If I might add to that - we've run extensive sensitivity analyses. Even in our most conservative scenarios, the risk-reward ratio remains quite favorable."
+            </div>
+        </div>
+        <div class="language-notes">
+            <h4>🔍 Language Notes:</h4>
+            <ul>
+                <li>"If I may" = polite way to offer an opinion</li>
+                <li>"Warrant our attention" = deserve to be considered (formal)</li>
+                <li>"Rather encouraging" = very positive (understated British style)</li>
+                <li>"Might we not be" = very formal way to make a suggestion</li>
+                <li>"If I might add" = polite way to contribute to discussion</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- New Formal Conversation 2: High-Stakes Client Meeting -->
+    <div class="comic-panel formal">
+        <div class="scene-title">
+            <span class="location">🌇 Client Dinner at At.mosphere, Burj Khalifa</span>
+            <span class="formality-level">Formal</span>
+        </div>
+        <div class="dialogue">
+            <div class="speech client">
+                <span class="speaker">Senior Client:</span>
+                "We've been thoroughly impressed with your proposal. However, there are certain aspects that require further clarification."
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "By all means, please do elaborate. We're keen to ensure all your requirements are met to the highest standard."
+            </div>
+            <div class="speech client">
+                <span class="speaker">Senior Client:</span>
+                "The implementation timeline seems rather ambitious. What contingencies have you put in place?"
+            </div>
+            <div class="speech mike">
+                <span class="speaker">Mike:</span>
+                "We've actually anticipated this concern. If you'll allow me to walk you through our risk mitigation strategy..."
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Perhaps we might pull up the detailed roadmap? I believe you'll find we've built in considerable flexibility."
+            </div>
+            <div class="speech client">
+                <span class="speaker">Senior Client:</span>
+                "That would be most helpful. Shall we reconvene after dessert to discuss the finer points?"
+            </div>
+        </div>
+        <div class="language-notes">
+            <h4>🔍 Language Notes:</h4>
+            <ul>
+                <li>"By all means" = formal way of saying 'yes, please go ahead'</li>
+                <li>"Rather ambitious" = diplomatic way of saying 'too aggressive'</li>
+                <li>"If you'll allow me" = very polite way to make a suggestion</li>
+                <li>"Perhaps we might" = extremely polite way to make a suggestion</li>
+                <li>"Most helpful" = formal way of saying 'very helpful'</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- New Semi-Formal Conversation 1: Parent-Teacher Meeting -->
+    <div class="comic-panel mixed">
+        <div class="scene-title">
+            <span class="location">🏫 International School Open Day</span>
+            <span class="formality-level">Semi-Formal</span>
+        </div>
+        <div class="dialogue">
+            <div class="speech teacher">
+                <span class="speaker">Teacher:</span>
+                "Thanks for coming in today. I wanted to have a quick chat about Tommy's progress."
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Of course! He's been banging on about the science project for weeks. Driving us up the wall with experiments!"
+            </div>
+            <div class="speech teacher">
+                <span class="speaker">Teacher:</span>
+                "That's brilliant actually! His enthusiasm really shows in class. Though we might need to rein in the more... explosive experiments."
+            </div>
+            <div class="speech mike">
+                <span class="speaker">Mike:</span>
+                "Ah, yeah... sorry about the baking soda incident. Got a bit carried away with the whole science mentor thing."
+            </div>
+            <div class="speech teacher">
+                <span class="speaker">Teacher:</span>
+                "No worries at all! Better to have them too excited than not interested, right? Though perhaps we could channel that energy into something less... volcanic?"
+            </div>
+        </div>
+        <div class="language-notes">
+            <h4>🔍 Language Notes:</h4>
+            <ul>
+                <li>"Banging on about" = talking constantly about something (British)</li>
+                <li>"Driving us up the wall" = annoying us (but said affectionately)</li>
+                <li>"Got a bit carried away" = became too excited</li>
+                <li>"No worries" = it's fine (casual reassurance)</li>
+                <li>Notice the mix of formal and informal language appropriate for school setting</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- New Semi-Formal Conversation 2: Networking Event -->
+    <div class="comic-panel mixed">
+        <div class="scene-title">
+            <span class="location">🎭 Dubai Opera Networking Event</span>
+            <span class="formality-level">Semi-Formal</span>
+        </div>
+        <div class="dialogue">
+            <div class="speech networker">
+                <span class="speaker">Fellow Expat:</span>
+                "So, how are you finding Dubai? Bit different from London, I imagine!"
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Oh my days, you have no idea! Took ages to get my head around driving on the other side again."
+            </div>
+            <div class="speech mike">
+                <span class="speaker">Mike:</span>
+                "She's being modest. First week here, she absolutely crushed a presentation to the regional directors."
+            </div>
+            <div class="speech networker">
+                <span class="speaker">Fellow Expat:</span>
+                "No way! You must tell me more. I'm always looking to connect with people who know their stuff."
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Well, if you're interested, we should grab coffee sometime. I know this fantastic little place in DIFC."
+            </div>
+        </div>
+        <div class="language-notes">
+            <h4>🔍 Language Notes:</h4>
+            <ul>
+                <li>"Oh my days" = expression of emphasis (British)</li>
+                <li>"Get my head around" = understand or become accustomed to</li>
+                <li>"Crushed it" = did very well (American slang)</li>
+                <li>"Know their stuff" = are competent/expert</li>
+                <li>Notice the mixing of professional and friendly tones</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- New Casual Conversation 1: Home Life -->
+    <div class="comic-panel casual">
+        <div class="scene-title">
+            <span class="location">🛋️ Sunday Morning at Home</span>
+            <span class="formality-level">Super Casual</span>
+        </div>
+        <div class="dialogue">
+            <div class="speech mike">
+                <span class="speaker">Mike:</span>
+                "Babe, have you seen my phone? I'm proper losing the plot here!"
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "You're such a muppet! It's literally in your hand, you absolute donut! 🙄"
+            </div>
+            <div class="speech mike">
+                <span class="speaker">Mike:</span>
+                "Oof... My bad! Reckon this Dubai heat's fried my last brain cell."
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Tell me about it! I'm so zonked I just tried to put the milk in the cupboard and the cereal in the fridge!"
+            </div>
+            <div class="speech mike">
+                <span class="speaker">Mike:</span>
+                "We're proper losing it! Fancy a cheeky brunch? Hair of the dog and all that?"
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Mate, you're speaking my language! Let me throw on some proper clothes, I look a right state!"
+            </div>
+        </div>
+        <div class="language-notes">
+            <h4>🔍 Language Notes:</h4>
+            <ul>
+                <li>"Proper losing the plot" = going crazy (British)</li>
+                <li>"Muppet/donut" = affectionate terms for someone being silly (British)</li>
+                <li>"Zonked" = extremely tired</li>
+                <li>"Cheeky brunch" = spontaneous brunch (British)</li>
+                <li>"Hair of the dog" = drinking to cure a hangover</li>
+                <li>"Look a right state" = look messy/disheveled (British)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- New Casual Conversation 2: Beach Day -->
+    <div class="comic-panel casual">
+        <div class="scene-title">
+            <span class="location">🏖️ JBR Beach</span>
+            <span class="formality-level">Super Casual</span>
+        </div>
+        <div class="dialogue">
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Oi, did you remember to pack the sunnies? My eyes are proper squinting!"
+            </div>
+            <div class="speech mike">
+                <span class="speaker">Mike:</span>
+                "Yeah nah, they're still on your head, ya goof! 😆"
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Oh for crying out loud! I'm losing my marbles! This heat's doing my nut in!"
+            </div>
+            <div class="speech mike">
+                <span class="speaker">Mike:</span>
+                "Chill, babe! Let's grab an ice cream. That guy's been hovering with his cart for ages, giving me the eyes!"
+            </div>
+            <div class="speech sarah">
+                <span class="speaker">Sarah:</span>
+                "Go on then, twist my arm! But none of that weird blue flavor you got last time. That was rank!"
+            </div>
+        </div>
+        <div class="language-notes">
+            <h4>🔍 Language Notes:</h4>
+            <ul>
+                <li>"Oi" = hey! (British/Australian)</li>
+                <li>"Sunnies" = sunglasses (British/Australian)</li>
+                <li>"Yeah nah" = no (Australian/New Zealand)</li>
+                <li>"Doing my nut in" = driving me crazy (British)</li>
+                <li>"Go on then" = okay, yes (British)</li>
+                <li>"Rank" = disgusting (British slang)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+       
+
+
+    <script>
+        // Wait for document to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all flashcards
+            const flashcards = document.querySelectorAll('.flashcard');
+        
+            // Track currently flipped card
+            let currentlyFlipped = null;
+        
+            // Add click handlers to each card
+            flashcards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Prevent click from bubbling
+                    e.stopPropagation();
+        
+                    // If this card is already flipped, flip it back
+                    if (this === currentlyFlipped) {
+                        this.classList.remove('flipped');
+                        currentlyFlipped = null;
+                        return;
+                    }
+        
+                    // If another card is flipped, unflip it
+                    if (currentlyFlipped) {
+                        currentlyFlipped.classList.remove('flipped');
+                    }
+        
+                    // Flip this card
+                    this.classList.add('flipped');
+                    currentlyFlipped = this;
+                });
+        
+                // Add hover effect class
+                card.addEventListener('mouseenter', function() {
+                    if (this !== currentlyFlipped) {
+                        this.classList.add('hover-effect');
+                    }
+                });
+        
+                card.addEventListener('mouseleave', function() {
+                    this.classList.remove('hover-effect');
+                });
+            });
+        
+            // Close flipped card when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.flashcard') && currentlyFlipped) {
+                    currentlyFlipped.classList.remove('flipped');
+                    currentlyFlipped = null;
+                }
+            });
+        
+            // Optional: Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (!currentlyFlipped) return;
+        
+                const currentIndex = Array.from(flashcards).indexOf(currentlyFlipped);
+                let nextIndex;
+        
+                switch(e.key) {
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                        nextIndex = (currentIndex + 1) % flashcards.length;
+                        break;
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                        nextIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
+                        break;
+                    case 'Escape':
+                        currentlyFlipped.classList.remove('flipped');
+                        currentlyFlipped = null;
+                        return;
+                    default:
+                        return;
+                }
+        
+                currentlyFlipped.classList.remove('flipped');
+                flashcards[nextIndex].classList.add('flipped');
+                currentlyFlipped = flashcards[nextIndex];
+                
+                // Ensure the next card is in view
+                flashcards[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        
+            // Add touch support for mobile
+            let touchStartX = 0;
+            let touchEndX = 0;
+        
+            flashcards.forEach(card => {
+                card.addEventListener('touchstart', function(e) {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, false);
+        
+                card.addEventListener('touchend', function(e) {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe(this);
+                }, false);
+            });
+        
+            function handleSwipe(card) {
+                const swipeThreshold = 50;
+                const swipeLength = touchEndX - touchStartX;
+        
+                if (Math.abs(swipeLength) > swipeThreshold) {
+                    if (swipeLength > 0) {
+                        // Swipe right - flip card
+                        if (!card.classList.contains('flipped')) {
+                            if (currentlyFlipped) {
+                                currentlyFlipped.classList.remove('flipped');
+                            }
+                            card.classList.add('flipped');
+                            currentlyFlipped = card;
+                        }
+                    } else {
+                        // Swipe left - unflip card
+                        card.classList.remove('flipped');
+                        currentlyFlipped = null;
+                    }
+                }
+            }
+        
+        
+            // Optional: Add animation end listener to handle cleanup
+            flashcards.forEach(card => {
+                card.addEventListener('transitionend', function(e) {
+                    if (e.propertyName === 'transform' && !this.classList.contains('flipped')) {
+                        // Reset any temporary states after animation completes
+                        this.classList.remove('hover-effect');
+                    }
+                });
+            });
+        });
+
+       
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all vocabulary spans
+    const vocabularyWords = document.querySelectorAll('.vocabulary');
+    
+    // Track currently shown definition
+    let currentDefinition = null;
+    
+    // Add click handlers to each vocabulary word
+    vocabularyWords.forEach(word => {
+        word.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent click from bubbling
+            
+            // Get the definition span within this vocabulary word
+            const definition = this.querySelector('.definition');
+            
+            // If there's already a definition showing and it's not this one, hide it
+            if (currentDefinition && currentDefinition !== definition) {
+                currentDefinition.style.display = 'none';
+            }
+            
+            // Toggle this definition
+            if (definition.style.display === 'block') {
+                definition.style.display = 'none';
+                currentDefinition = null;
+            } else {
+                definition.style.display = 'block';
+                currentDefinition = definition;
+            }
+        });
+    });
+    
+    // Hide definition when clicking anywhere else on the page
+    document.addEventListener('click', function() {
+        if (currentDefinition) {
+            currentDefinition.style.display = 'none';
+            currentDefinition = null;
+        }
+    });
+    
+    // Optional: Hide definition when pressing Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && currentDefinition) {
+            currentDefinition.style.display = 'none';
+            currentDefinition = null;
+        }
+    });
+});
+        </script>
+</body>
+</html>
